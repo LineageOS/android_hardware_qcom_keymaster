@@ -62,8 +62,8 @@ struct qcom_km_ion_info_t {
 struct qcom_keymaster_handle {
     struct QSEECom_handle *qseecom;
     void *libhandle;
-    int (*QSEECom_start_app)(struct QSEECom_handle ** handle, const char* path,
-                          const char* appname, uint32_t size);
+    int (*QSEECom_start_app)(struct QSEECom_handle ** handle, char* path,
+                          char* appname, uint32_t size);
     int (*QSEECom_shutdown_app)(struct QSEECom_handle **handle);
     int (*QSEECom_send_cmd)(struct QSEECom_handle* handle, void *cbuf,
                           uint32_t clen, void *rbuf, uint32_t rlen);
@@ -222,10 +222,10 @@ static int32_t qcom_km_ION_memalloc(struct qcom_km_ion_info_t *handle,
     ion_alloc_data.align = 4096;
 
     /* memory is allocated from EBI heap */
-    ion_alloc_data.heap_mask = ION_HEAP_CARVEOUT_MASK;
+   ion_alloc_data.heap_mask= ION_HEAP(ION_QSECOM_HEAP_ID);
 
     /* Set the memory to be uncached */
-    ion_alloc_data.flags = ION_HEAP(ION_QSECOM_HEAP_ID);
+    ion_alloc_data.flags = 0;
 
     /* IOCTL call to ION for memory request */
     rc = ioctl(ion_fd, ION_IOC_ALLOC, &ion_alloc_data);
