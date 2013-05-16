@@ -38,10 +38,10 @@ __BEGIN_DECLS
  * module to recognize which API level of the client it is dealing with in
  * the case of pre-compiled binary clients.
  */
-#define QCOM_KEYMASTER_API_VERSION 1
+#define QCOM_KEYMASTER_API_VERSION 2
 
 #define KM_MAGIC_NUM     (0x4B4D4B42)    /* "KMKB" Key Master Key Blob in hex */
-#define KM_KEY_SIZE_MAX  (256)           /* 2048 bits */
+#define KM_KEY_SIZE_MAX  (512)           /* 4096 bits */
 #define KM_IV_LENGTH     (16)            /* AES128 CBC IV */
 #define KM_HMAC_LENGTH   (32)            /* SHA2 will be used for HMAC  */
 
