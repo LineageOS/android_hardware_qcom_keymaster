@@ -11,6 +11,7 @@ LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 LOCAL_SRC_FILES := keymaster_qcom.cpp
 
 LOCAL_C_INCLUDES := $(TARGET_OUT_HEADERS)/common/inc \
+		    $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include \
                     external/openssl/include
 
 LOCAL_C_FLAGS = -fvisibility=hidden -Wall -Werror
