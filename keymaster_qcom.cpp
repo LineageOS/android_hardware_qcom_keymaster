@@ -27,7 +27,6 @@
 #include <openssl/err.h>
 #include <openssl/x509.h>
 
-#include <utils/UniquePtr.h>
 #include <linux/ioctl.h>
 #include <linux/msm_ion.h>
 #include <sys/mman.h>
@@ -42,6 +41,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dlfcn.h>
+
+#include <UniquePtr.h>
 
 #include "QSEEComAPI.h"
 #include "keymaster_qcom.h"
