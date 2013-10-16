@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2012 The Android Open Source Project
+ *  Copyright (C) 2012-2013 The Android Open Source Project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you
  *  may not use this file except in compliance with the License.  You may
@@ -18,6 +18,7 @@
 #include <string.h>
 #include <stdint.h>
 
+#include <keystore/keystore.h>
 #include <hardware/hardware.h>
 #include <hardware/keymaster.h>
 
@@ -664,6 +665,10 @@ static int qcom_km_close(hw_device_t *dev)
     keymaster_device_t* km_dev = (keymaster_device_t *)dev;
     struct qcom_keymaster_handle *km_handle =(struct qcom_keymaster_handle *)km_dev->context;
 
+    if (km_handle == NULL) {
+        ALOGE("km_handle  == NULL");
+        return -1;
+    }
     if (km_handle->qseecom == NULL) {
         ALOGE("Context  == NULL");
         return -1;
@@ -760,6 +765,15 @@ static int qcom_km_open(const hw_module_t* module, const char* name,
     if (ret) {
         ALOGE("Loading keymaster app failied");
         free(km_handle);
+        dev->context = NULL;
+        dev->generate_keypair = NULL;
+        dev->import_keypair = NULL;
+        dev->get_keypair_public = NULL;
+        dev->delete_keypair = NULL;
+        dev->delete_all = NULL;
+        dev->sign_data = NULL;
+        dev->verify_data = NULL;
+        dev->common.close = NULL;
         return -1;
     }
     dev->common.tag = HARDWARE_DEVICE_TAG;
