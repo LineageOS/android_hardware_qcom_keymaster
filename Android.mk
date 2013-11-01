@@ -1,10 +1,10 @@
 LOCAL_PATH := $(call my-dir)
 
-ifneq ($(filter msm8960,$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter msm8960 msm8974 msm8226,$(TARGET_BOARD_PLATFORM)),)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := keystore.msm8960
+LOCAL_MODULE := keystore.$(TARGET_BOARD_PLATFORM)
 
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 
@@ -28,4 +28,4 @@ LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
 
-endif # msm8960 == TARGET_BOARD_PLATFORM
+endif # TARGET_BOARD_PLATFORM
