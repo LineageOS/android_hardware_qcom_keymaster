@@ -16,6 +16,10 @@ LOCAL_C_INCLUDES := $(TARGET_OUT_HEADERS)/common/inc \
 
 LOCAL_C_FLAGS = -fvisibility=hidden -Wall -Werror
 
+ifeq ($(TARGET_NO_QSEECOM_SET_BANDWIDTH),true)
+  LOCAL_CFLAGS += -DNO_QSEECOM_SET_BANDWIDTH
+endif
+
 LOCAL_SHARED_LIBRARIES := \
         libcrypto \
         liblog \

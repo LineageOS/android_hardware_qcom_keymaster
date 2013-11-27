@@ -70,7 +70,9 @@ struct qcom_keymaster_handle {
     int (*QSEECom_send_modified_cmd)(struct QSEECom_handle* handle, void *cbuf,
                           uint32_t clen, void *rbuf, uint32_t rlen,
                           struct QSEECom_ion_fd_info *ihandle);
+#ifndef NO_QSEECOM_SET_BANDWIDTH
     int (*QSEECom_set_bandwidth)(struct QSEECom_handle* handle, bool high);
+#endif
 };
 typedef struct qcom_keymaster_handle qcom_keymaster_handle_t;
 
@@ -350,19 +352,21 @@ static int qcom_km_generate_keypair(const keymaster_device_t* dev,
     resp->status = KEYMASTER_FAILURE;
     resp->key_blob_len =  sizeof(qcom_km_key_blob_t);
 
+#ifndef NO_QSEECOM_SET_BANDWIDTH
     ret = (*km_handle->QSEECom_set_bandwidth)(handle, true);
     if (ret < 0) {
         ALOGE("Generate key command failed (unable to enable clks) ret =%d", ret);
         return -1;
     }
-
+#endif
     ret = (*km_handle->QSEECom_send_cmd)(handle, send_cmd,
                                QSEECOM_ALIGN(sizeof(keymaster_gen_keypair_cmd_t)), resp,
                                QSEECOM_ALIGN(sizeof(keymaster_gen_keypair_resp_t)));
 
+#ifndef NO_QSEECOM_SET_BANDWIDTH
     if((*km_handle->QSEECom_set_bandwidth)(handle, false))
         ALOGE("Import key command: (unable to disable clks)");
-
+#endif
     if ( (ret < 0)  ||  (resp->status  < 0)) {
         ALOGE("Generate key command failed resp->status = %d ret =%d", resp->status, ret);
         return -1;
@@ -432,18 +436,22 @@ static int qcom_km_import_keypair(const keymaster_device_t* dev,
     resp->status = KEYMASTER_FAILURE;
     resp->key_blob_len =  sizeof(qcom_km_key_blob_t);
 
+#ifndef NO_QSEECOM_SET_BANDWIDTH
     ret = (*km_handle->QSEECom_set_bandwidth)(handle, true);
     if (ret < 0) {
         ALOGE("Import key command failed (unable to enable clks) ret =%d", ret);
         qcom_km_ion_dealloc(&ihandle);
         return -1;
     }
+#endif
     ret = (*km_handle->QSEECom_send_modified_cmd)(handle, send_cmd,
                                QSEECOM_ALIGN(sizeof(*send_cmd)), resp,
                                QSEECOM_ALIGN(sizeof(*resp)), &ion_fd_info);
 
+#ifndef NO_QSEECOM_SET_BANDWIDTH
     if((*km_handle->QSEECom_set_bandwidth)(handle, false))
         ALOGE("Import key command: (unable to disable clks)");
+#endif
 
     if ( (ret < 0)  ||  (resp->status  < 0)) {
         ALOGE("Import key command failed resp->status = %d ret =%d", resp->status, ret);
@@ -531,19 +539,23 @@ static int qcom_km_sign_data(const keymaster_device_t* dev,
     resp->sig_len = KM_KEY_SIZE_MAX;
     resp->status = KEYMASTER_FAILURE;
 
+#ifndef NO_QSEECOM_SET_BANDWIDTH
     ret = (*km_handle->QSEECom_set_bandwidth)(handle, true);
     if (ret < 0) {
         ALOGE("Sign data command failed (unable to enable clks) ret =%d", ret);
         qcom_km_ion_dealloc(&ihandle);
         return -1;
     }
+#endif
 
     ret = (*km_handle->QSEECom_send_modified_cmd)(handle, send_cmd,
                                QSEECOM_ALIGN(sizeof(*send_cmd)), resp,
                                QSEECOM_ALIGN(sizeof(*resp)), &ion_fd_info);
 
+#ifndef NO_QSEECOM_SET_BANDWIDTH
     if((*km_handle->QSEECom_set_bandwidth)(handle, false))
         ALOGE("Sign data command: (unable to disable clks)");
+#endif
 
     if ( (ret < 0)  ||  (resp->status  < 0)) {
         ALOGE("Sign data command failed resp->status = %d ret =%d", resp->status, ret);
@@ -635,19 +647,23 @@ static int qcom_km_verify_data(const keymaster_device_t* dev,
                                   signature, signatureLength);
     resp->status = KEYMASTER_FAILURE;
 
+#ifndef NO_QSEECOM_SET_BANDWIDTH
     ret = (*km_handle->QSEECom_set_bandwidth)(handle, true);
     if (ret < 0) {
         ALOGE("Verify data  command failed (unable to enable clks) ret =%d", ret);
         qcom_km_ion_dealloc(&ihandle);
         return -1;
     }
+#endif
 
     ret = (*km_handle->QSEECom_send_modified_cmd)(handle, send_cmd,
                                QSEECOM_ALIGN(sizeof(*send_cmd)), resp,
                                QSEECOM_ALIGN(sizeof(*resp)), &ion_fd_info);
 
+#ifndef NO_QSEECOM_SET_BANDWIDTH
     if((*km_handle->QSEECom_set_bandwidth)(handle, false))
         ALOGE("Verify data  command: (unable to disable clks)");
+#endif
 
     if ( (ret < 0)  ||  (resp->status  < 0)) {
         ALOGE("Verify data command failed resp->status = %d ret =%d", resp->status, ret);
@@ -710,6 +726,7 @@ static int qcom_km_get_lib_sym(qcom_keymaster_handle_t* km_handle)
                    km_handle->libhandle  = NULL;
                    return -1;
              }
+#ifndef NO_QSEECOM_SET_BANDWIDTH
             *(void **)(&km_handle->QSEECom_set_bandwidth) =
                                dlsym(km_handle->libhandle,"QSEECom_set_bandwidth");
             if (km_handle->QSEECom_set_bandwidth == NULL) {
@@ -718,6 +735,7 @@ static int qcom_km_get_lib_sym(qcom_keymaster_handle_t* km_handle)
                    km_handle->libhandle  = NULL;
                    return -1;
              }
+#endif
 
     } else {
         ALOGE("failed to load qseecom library");
