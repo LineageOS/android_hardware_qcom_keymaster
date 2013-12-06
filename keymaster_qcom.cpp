@@ -680,7 +680,7 @@ static int qcom_km_close(hw_device_t *dev)
 
 static int qcom_km_get_lib_sym(qcom_keymaster_handle_t* km_handle)
 {
-    km_handle->libhandle = dlopen("/system/lib/libQSEEComAPI.so", RTLD_NOW);
+    km_handle->libhandle = dlopen("/vendor/lib/libQSEEComAPI.so", RTLD_NOW);
     if (  km_handle->libhandle  ) {
         *(void **)(&km_handle->QSEECom_start_app) =
                                dlsym(km_handle->libhandle,"QSEECom_start_app");
