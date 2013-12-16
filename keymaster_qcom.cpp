@@ -62,8 +62,8 @@ struct qcom_km_ion_info_t {
 struct qcom_keymaster_handle {
     struct QSEECom_handle *qseecom;
     void *libhandle;
-    int (*QSEECom_start_app)(struct QSEECom_handle ** handle, char* path,
-                          char* appname, uint32_t size);
+    int (*QSEECom_start_app)(struct QSEECom_handle ** handle, const char *path,
+                          const char *appname, uint32_t size);
     int (*QSEECom_shutdown_app)(struct QSEECom_handle **handle);
     int (*QSEECom_send_cmd)(struct QSEECom_handle* handle, void *cbuf,
                           uint32_t clen, void *rbuf, uint32_t rlen);
