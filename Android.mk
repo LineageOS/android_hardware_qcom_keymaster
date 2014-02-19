@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-ifneq ($(filter msm8960 msm8974 msm8226 msm8610,$(TARGET_BOARD_PLATFORM)),)
+ifeq ($(call is-vendor-board-platform,QCOM),true)
 
 LOCAL_MODULE := keystore.$(TARGET_BOARD_PLATFORM)
 
