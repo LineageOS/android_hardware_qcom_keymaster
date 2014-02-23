@@ -62,8 +62,8 @@ struct qcom_km_ion_info_t {
 struct qcom_keymaster_handle {
     struct QSEECom_handle *qseecom;
     void *libhandle;
-    int (*QSEECom_start_app)(struct QSEECom_handle ** handle, char* path,
-                          char* appname, uint32_t size);
+    int (*QSEECom_start_app)(struct QSEECom_handle ** handle, const char *path,
+                          const char *appname, uint32_t size);
     int (*QSEECom_shutdown_app)(struct QSEECom_handle **handle);
     int (*QSEECom_send_cmd)(struct QSEECom_handle* handle, void *cbuf,
                           uint32_t clen, void *rbuf, uint32_t rlen);
@@ -664,6 +664,10 @@ static int qcom_km_close(hw_device_t *dev)
     keymaster_device_t* km_dev = (keymaster_device_t *)dev;
     struct qcom_keymaster_handle *km_handle =(struct qcom_keymaster_handle *)km_dev->context;
 
+    if (km_handle == NULL) {
+        ALOGE("km_handle  == NULL");
+        return -1;
+    }
     if (km_handle->qseecom == NULL) {
         ALOGE("Context  == NULL");
         return -1;
@@ -676,7 +680,7 @@ static int qcom_km_close(hw_device_t *dev)
 
 static int qcom_km_get_lib_sym(qcom_keymaster_handle_t* km_handle)
 {
-    km_handle->libhandle = dlopen("/system/lib/libQSEEComAPI.so", RTLD_NOW);
+    km_handle->libhandle = dlopen("/vendor/lib/libQSEEComAPI.so", RTLD_NOW);
     if (  km_handle->libhandle  ) {
         *(void **)(&km_handle->QSEECom_start_app) =
                                dlsym(km_handle->libhandle,"QSEECom_start_app");
@@ -758,8 +762,21 @@ static int qcom_km_open(const hw_module_t* module, const char* name,
     ret = (*km_handle->QSEECom_start_app)((struct QSEECom_handle **)&km_handle->qseecom,
                          "/vendor/firmware/keymaster", "keymaster", 4096*2);
     if (ret) {
+        ret = (*km_handle->QSEECom_start_app)((struct QSEECom_handle **)&km_handle->qseecom,
+                         "/firmware/image", "keymaste", 4096*2);
+    }
+    if (ret) {
         ALOGE("Loading keymaster app failied");
         free(km_handle);
+        dev->context = NULL;
+        dev->generate_keypair = NULL;
+        dev->import_keypair = NULL;
+        dev->get_keypair_public = NULL;
+        dev->delete_keypair = NULL;
+        dev->delete_all = NULL;
+        dev->sign_data = NULL;
+        dev->verify_data = NULL;
+        dev->common.close = NULL;
         return -1;
     }
     dev->common.tag = HARDWARE_DEVICE_TAG;
