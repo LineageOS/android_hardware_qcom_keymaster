@@ -4,7 +4,7 @@ include $(CLEAR_VARS)
 
 ifneq ($(filter msm8960 msm8974 msm8226 msm8610,$(TARGET_BOARD_PLATFORM)),)
 
-LOCAL_MODULE := keystore.qcom
+LOCAL_MODULE := keystore.$(TARGET_BOARD_PLATFORM)
 
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 
