@@ -767,7 +767,7 @@ static int qcom_km_open(const hw_module_t* module, const char* name,
     dev->common.version = 1;
     dev->common.module = (struct hw_module_t*) module;
     dev->common.close = qcom_km_close;
-    dev->flags = 0;
+    dev->flags = KEYMASTER_BLOBS_ARE_STANDALONE;
 
     dev->generate_keypair = qcom_km_generate_keypair;
     dev->import_keypair = qcom_km_import_keypair;
