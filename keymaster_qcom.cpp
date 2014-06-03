@@ -224,7 +224,7 @@ static int32_t qcom_km_ION_memalloc(struct qcom_km_ion_info_t *handle,
     ion_alloc_data.align = 4096;
 
     /* memory is allocated from EBI heap */
-   ion_alloc_data.heap_id_mask= ION_HEAP(ION_QSECOM_HEAP_ID);
+   ion_alloc_data.ION_HEAP_MASK = ION_HEAP(ION_QSECOM_HEAP_ID);
 
     /* Set the memory to be uncached */
     ion_alloc_data.flags = 0;
