@@ -51,6 +51,9 @@
 //#define LOG_NDEBUG 0
 
 #define LOG_TAG "QCOMKeyMaster"
+#define UNUSED(x) (void)(x)
+#define KM_SB_LENGTH (4096 * 2)
+
 #include <cutils/log.h>
 struct qcom_km_ion_info_t {
     int32_t ion_fd;
@@ -63,8 +66,8 @@ struct qcom_km_ion_info_t {
 struct qcom_keymaster_handle {
     struct QSEECom_handle *qseecom;
     void *libhandle;
-    int (*QSEECom_start_app)(struct QSEECom_handle ** handle, char* path,
-                          char* appname, uint32_t size);
+    int (*QSEECom_start_app)(struct QSEECom_handle ** handle, const char* path,
+                          const char* appname, uint32_t size);
     int (*QSEECom_shutdown_app)(struct QSEECom_handle **handle);
     int (*QSEECom_send_cmd)(struct QSEECom_handle* handle, void *cbuf,
                           uint32_t clen, void *rbuf, uint32_t rlen);
@@ -105,6 +108,7 @@ static int qcom_km_get_keypair_public(const keymaster0_device_t* dev,
 
     struct qcom_km_key_blob * keyblob_ptr = (struct qcom_km_key_blob *)keyBlob;
 
+    UNUSED(dev);
     if (x509_data == NULL || x509_data_length == NULL) {
         ALOGE("Output public key buffer == NULL");
         return -1;
@@ -236,7 +240,7 @@ static int32_t qcom_km_ION_memalloc(struct qcom_km_ion_info_t *handle,
        goto alloc_fail;
     }
 
-    if (ion_alloc_data.handle != NULL) {
+    if (ion_alloc_data.handle) {
        ifd_data.handle = ion_alloc_data.handle;
     } else {
        ret = -1;
@@ -403,7 +407,7 @@ static int qcom_km_import_keypair(const keymaster0_device_t* dev,
     int ret = 0;
 
     ihandle.ion_fd = 0;
-    ihandle.ion_alloc_handle.handle = NULL;
+    ihandle.ion_alloc_handle.handle = 0;
     if (qcom_km_ION_memalloc(&ihandle, QSEECOM_ALIGN(key_length)) < 0) {
         ALOGE("ION allocation  failed");
         return -1;
@@ -425,7 +429,7 @@ static int qcom_km_import_keypair(const keymaster0_device_t* dev,
     resp = (keymaster_import_keypair_resp_t *)(handle->ion_sbuffer +
                                         QSEECOM_ALIGN(sizeof(keymaster_import_keypair_cmd_t)));
     send_cmd->cmd_id = KEYMASTER_IMPORT_KEYPAIR;
-    send_cmd->pkcs8_key = (uint32_t)ihandle.ion_sbuffer;
+    send_cmd->pkcs8_key = (uint32_t)(uintptr_t)ihandle.ion_sbuffer;
 
     memcpy((unsigned char *)ihandle.ion_sbuffer, key, key_length);
 
@@ -506,7 +510,7 @@ static int qcom_km_sign_data(const keymaster0_device_t* dev,
 
     handle = (struct QSEECom_handle *)(km_handle->qseecom);
     ihandle.ion_fd = 0;
-    ihandle.ion_alloc_handle.handle = NULL;
+    ihandle.ion_alloc_handle.handle = 0;
     if (qcom_km_ION_memalloc(&ihandle, dataLength) < 0) {
         ALOGE("ION allocation  failed");
         return -1;
@@ -527,7 +531,7 @@ static int qcom_km_sign_data(const keymaster0_device_t* dev,
     memcpy((unsigned char *)(&send_cmd->key_blob), keyBlob, keyBlobLength);
     memcpy((unsigned char *)ihandle.ion_sbuffer, data, dataLength);
 
-    send_cmd->data = (uint32_t)ihandle.ion_sbuffer;
+    send_cmd->data = (uint32_t)(uintptr_t)ihandle.ion_sbuffer;
     send_cmd->dlen = dataLength;
     resp->sig_len = KM_KEY_SIZE_MAX;
     resp->status = KEYMASTER_FAILURE;
@@ -606,7 +610,7 @@ static int qcom_km_verify_data(const keymaster0_device_t* dev,
 
     handle = (struct QSEECom_handle *)(km_handle->qseecom);
     ihandle.ion_fd = 0;
-    ihandle.ion_alloc_handle.handle = NULL;
+    ihandle.ion_alloc_handle.handle = 0;
     if (qcom_km_ION_memalloc(&ihandle, signedDataLength + signatureLength) <0) {
         ALOGE("ION allocation  failed");
         return -1;
@@ -626,7 +630,7 @@ static int qcom_km_verify_data(const keymaster0_device_t* dev,
     send_cmd->sign_param.padding_type = sign_params->padding_type;
     memcpy((unsigned char *)(&send_cmd->key_blob), keyBlob, keyBlobLength);
 
-    send_cmd->signed_data = (uint32_t)ihandle.ion_sbuffer;
+    send_cmd->signed_data = (uint32_t)(uintptr_t)ihandle.ion_sbuffer;
     send_cmd->signed_dlen = signedDataLength;
     memcpy((unsigned char *)ihandle.ion_sbuffer, signedData, signedDataLength);
 
@@ -757,7 +761,10 @@ static int qcom_km_open(const hw_module_t* module, const char* name,
     }
     dev->context = (void *)km_handle;
     ret = (*km_handle->QSEECom_start_app)((struct QSEECom_handle **)&km_handle->qseecom,
-                         "/vendor/firmware/keymaster", "keymaster", 4096*2);
+                        "/vendor/firmware/keymaster", "keymaster", KM_SB_LENGTH);
+    if(ret)
+        ret = (*km_handle->QSEECom_start_app)((struct QSEECom_handle **)&km_handle->qseecom,
+                        "/firmware/image", "keymaste", KM_SB_LENGTH);
     if (ret) {
         ALOGE("Loading keymaster app failed");
         free(km_handle);
