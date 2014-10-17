@@ -2,7 +2,7 @@
 ifneq ($(BOARD_IS_AUTOMOTIVE),true)
 LOCAL_PATH := $(call my-dir)
 
-ifneq ($(filter msm8960 msm8974 msm8226 msm8084,$(TARGET_BOARD_PLATFORM)),)
+ifeq ($(call is-vendor-board-platform,QCOM),true)
 
 keymaster-def := -fvisibility=hidden -Wall
 ifeq ($(TARGET_BOARD_PLATFORM),msm8084)
@@ -13,7 +13,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := keystore.$(TARGET_BOARD_PLATFORM)
 
-LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
+LOCAL_MODULE_RELATIVE_PATH := hw
 
 LOCAL_SRC_FILES := keymaster_qcom.cpp
 
