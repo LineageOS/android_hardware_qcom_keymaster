@@ -28,7 +28,9 @@ LOCAL_SHARED_LIBRARIES := \
         libdl \
         libcutils
 
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := \
+    $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr \
+    $(LOCAL_PATH)/Android.mk
 
 LOCAL_MODULE_TAGS := optional
 
