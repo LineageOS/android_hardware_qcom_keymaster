@@ -3,7 +3,7 @@ LOCAL_PATH := $(call my-dir)
 ifeq ($(call is-vendor-board-platform,QCOM),true)
 
 keymaster-def := -fvisibility=hidden -Wall
-ifeq ($(TARGET_BOARD_PLATFORM),msm8084)
+ifeq ($(TARGET_BOARD_PLATFORM),$(filter $(TARGET_BOARD_PLATFORM),apq8084 msm8084))
 keymaster-def += -D_ION_HEAP_MASK_COMPATIBILITY_WA
 endif
 
