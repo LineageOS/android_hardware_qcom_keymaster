@@ -1,6 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
-ifeq ($(call is-vendor-board-platform,QCOM),true)
+ifneq ($(filter msm8960 msm8974 msm8226 msm8084 apq8084,$(TARGET_BOARD_PLATFORM)),)
 
 keymaster-def := -fvisibility=hidden -Wall
 ifeq ($(TARGET_BOARD_PLATFORM),$(filter $(TARGET_BOARD_PLATFORM),apq8084 msm8084))
