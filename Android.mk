@@ -7,10 +7,6 @@ ifeq ($(TARGET_BOARD_PLATFORM),$(filter $(TARGET_BOARD_PLATFORM),apq8084 msm8084
 keymaster-def += -D_ION_HEAP_MASK_COMPATIBILITY_WA
 endif
 
-ifeq ($(TARGET_USE_ION_COMPAT), true)
-keymaster-def += -D_ION_HEAP_MASK_COMPATIBILITY_WA
-endif
-
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := keystore.$(TARGET_BOARD_PLATFORM)
