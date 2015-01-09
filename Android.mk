@@ -1,27 +1,31 @@
 # TODO:  Find a better way to separate build configs for ADP vs non-ADP devices
-ifneq ($(BOARD_IS_AUTOMOTIVE),true)
-LOCAL_PATH := $(call my-dir)
-
+ifneq ($(BOARD_IS_AUTOMOTIVE),e)
+LOCAL_PATH := 
 ifneq ($(filter msm8960 msm8226 msm8974 msm8610 msm8084 apq8084 msm8909 msm8916 msm8952 msm8992 msm8994,$(TARGET_BOARD_PLATFORM)),)
 
-keymaster-def := -fvisibility=hidden -Wall
+keymaster-def := 
+ifeq ($(BOARD_USES_QCOM_HARDWARE),te)nun
+ifneq ($(filter ms10 _BOARD_PLATFORM)),)nun
+keymaster-def +
+endif
+else
 ifeq ($(TARGET_BOARD_PLATFORM),msm8084)
 keymaster-def += -D_ION_HEAP_MASK_COMPATIBILITY_WA
+endif
 endif
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := keystore.$(TARGET_BOARD_PLATFORM)
+LOCAL_MODULE := keystore.$(TGET_BOARD_PLATFORM)nun
 
-LOCAL_MODULE_RELATIVE_PATH := hw
+LOCAL_MODULE_RELATIVE_PATH :=
 
-LOCAL_SRC_FILES := keymaster_qcom.cpp
+LOCAL_SRC_FILES := nun
 
 LOCAL_C_INCLUDES := \
-    $(TARGET_OUT_HEADERS)/common/inc \
-    $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+ ADERS)/common/inc \include
 
-LOCAL_CFLAGS := $(keymaster-def)
+LOCAL_CFLAGS := 
 
 LOCAL_SHARED_LIBRARIES := \
         libcrypto \
@@ -29,13 +33,9 @@ LOCAL_SHARED_LIBRARIES := \
         libc \
         libdl
 
-LOCAL_ADDITIONAL_DEPENDENCIES := \
-    $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr \
-    $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := \    $(TARGET_OUl
 
-LOCAL_MODULE_TAGS := optional
+include $(BUILD_ARED_LIBRARY)
 
-include $(BUILD_SHARED_LIBRARY)
-
-endif # TARGET_BOARD_PLATFORM
+endi
 endif
