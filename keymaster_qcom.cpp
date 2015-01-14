@@ -43,6 +43,7 @@
 #include <dlfcn.h>
 
 #include <UniquePtr.h>
+#include <cutils/properties.h>
 
 #include "QSEEComAPI.h"
 #include "keymaster_qcom.h"
@@ -53,6 +54,8 @@
 #define LOG_TAG "QCOMKeyMaster"
 #define UNUSED(x) (void)(x)
 #define KM_SB_LENGTH (4096 * 2)
+#define MAX_PROPERTY_GET_ATTEMPTS 60
+#define PROPERTY_GET_SLEEP_INTERVAL 1
 
 #include <cutils/log.h>
 struct qcom_km_ion_info_t {
@@ -738,6 +741,8 @@ static int qcom_km_open(const hw_module_t* module, const char* name,
         hw_device_t** device)
 {
     int ret = 0;
+    unsigned int attempt_num = 0;
+    char property_val[PROPERTY_VALUE_MAX] = {0};
     qcom_keymaster_handle_t* km_handle;
     if (strcmp(name, KEYSTORE_KEYMASTER) != 0)
         return -EINVAL;
@@ -760,6 +765,26 @@ static int qcom_km_open(const hw_module_t* module, const char* name,
         return -ENOMEM;
     }
     dev->context = (void *)km_handle;
+    while (attempt_num < MAX_PROPERTY_GET_ATTEMPTS)
+    {
+        property_get("sys.keymaster.loaded", property_val, "");
+        if (strncmp(property_val, "true", sizeof(property_val)) == 0)
+        {
+            ALOGD("keymaster app is loaded");
+            break;
+        }
+        if (attempt_num == 0)
+            ALOGE("keymaster app is not loaded, attempt number %d", attempt_num);
+        attempt_num++;
+        sleep(PROPERTY_GET_SLEEP_INTERVAL);
+    }
+    if (attempt_num == MAX_PROPERTY_GET_ATTEMPTS)
+    {
+        ALOGE("Keymaster app not loaded: Max attempts reached");
+        free(km_handle);
+        return -1;
+    }
+    ALOGD("keymaster app got loaded at attempt number %d", attempt_num);
     ret = (*km_handle->QSEECom_start_app)((struct QSEECom_handle **)&km_handle->qseecom,
                         "/vendor/firmware/keymaster", "keymaster", KM_SB_LENGTH);
     if(ret)
