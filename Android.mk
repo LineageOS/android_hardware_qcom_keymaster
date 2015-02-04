@@ -25,7 +25,8 @@ LOCAL_SHARED_LIBRARIES := \
         libcrypto \
         liblog \
         libc \
-        libdl
+        libdl \
+        libcutils
 
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
