@@ -30,8 +30,7 @@ LOCAL_SHARED_LIBRARIES := \
         libcrypto \
         liblog \
         libc \
-        libdl \
-        libcutils
+        libdl
 
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk \
                                  $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
