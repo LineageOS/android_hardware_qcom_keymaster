@@ -31,8 +31,7 @@ LOCAL_SHARED_LIBRARIES := \
         libcrypto \
         liblog \
         libc \
-        libdl \
-        libcutils
+        libdl
 
 LOCAL_ADDITIONAL_DEPENDENCIES := \
     $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr \
