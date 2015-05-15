@@ -26,7 +26,11 @@ __BEGIN_DECLS
 #ifdef _ION_HEAP_MASK_COMPATIBILITY_WA
 #define ION_HEAP_MASK heap_mask
 #else
+#ifdef QCOM_BSP
+#define ION_HEAP_MASK heap_mask
+#else
 #define ION_HEAP_MASK heap_id_mask
+#endif
 #endif
 
 /**
