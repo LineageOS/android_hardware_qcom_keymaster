@@ -13,6 +13,11 @@ keymaster-def += -D_ION_HEAP_MASK_COMPATIBILITY_WA
 endif
 endif
 
+# Only msm899x support checking if the keymaster app is loaded
+ifneq ($(filter msm8992 msm8994,$(TARGET_BOARD_PLATFORM)),)
+keymaster-def += -DCHECK_IF_APP_LOADED
+endif
+
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := keystore.$(TARGET_BOARD_PLATFORM)
