@@ -1,7 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
-ifneq ($(filter msm8960 msm8974 msm8226 msm8610 msm8084 apq8084 msm8916,$(TARGET_BOARD_PLATFORM)),)
-
+ifeq ($(call my-dir),$(call project-path-for,keymaster))
 keymaster-def := -fvisibility=hidden -Wall
 ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
 ifneq ($(filter msm8960 msm8226 msm8610 msm8974 msm8084 apq8084,$(TARGET_BOARD_PLATFORM)),)
