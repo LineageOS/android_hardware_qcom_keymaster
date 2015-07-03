@@ -13,6 +13,11 @@ keymaster-def += -D_ION_HEAP_MASK_COMPATIBILITY_WA
 endif
 endif
 
+ifeq ($(TARGET_SUPPORTS_QSEECOM_APP_CHECK),true)
+keymaster-def += -DSUPPORTS_APP_LOAD_CHECK
+else
+endif
+
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := keystore.$(TARGET_BOARD_PLATFORM)
