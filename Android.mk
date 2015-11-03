@@ -12,6 +12,9 @@ ifeq ($(TARGET_BOARD_PLATFORM),msm8084)
 keymaster-def += -D_ION_HEAP_MASK_COMPATIBILITY_WA
 endif
 endif
+ifeq ($(TARGET_KEYMASTER_WAIT_FOR_QSEE),true)
+LOCAL_CFLAGS += -DWAIT_FOR_QSEE
+endif
 
 include $(CLEAR_VARS)
 
