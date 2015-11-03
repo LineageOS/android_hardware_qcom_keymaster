@@ -767,12 +767,16 @@ static int qcom_km_open(const hw_module_t* module, const char* name,
     dev->context = (void *)km_handle;
     while (attempt_num < MAX_PROPERTY_GET_ATTEMPTS)
     {
+#ifdef WAIT_FOR_QSEE
         property_get("sys.keymaster.loaded", property_val, "");
         if (strncmp(property_val, "true", sizeof(property_val)) == 0)
         {
+#endif
             ALOGD("keymaster app is loaded");
             break;
+#ifdef WAIT_FOR_QSEE
         }
+#endif
         if (attempt_num == 0)
             ALOGE("keymaster app is not loaded, attempt number %d", attempt_num);
         attempt_num++;
