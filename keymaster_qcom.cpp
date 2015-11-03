@@ -743,7 +743,9 @@ static int qcom_km_open(const hw_module_t* module, const char* name,
 {
     int ret = 0;
     unsigned int attempt_num = 0;
+#ifndef SKIP_WAITING_FOR_QSEE
     char property_val[PROPERTY_VALUE_MAX] = {0};
+#endif
     qcom_keymaster_handle_t* km_handle;
     if (strcmp(name, KEYSTORE_KEYMASTER) != 0)
         return -EINVAL;
@@ -768,12 +770,16 @@ static int qcom_km_open(const hw_module_t* module, const char* name,
     dev->context = (void *)km_handle;
     while (attempt_num < MAX_PROPERTY_GET_ATTEMPTS)
     {
+#ifndef SKIP_WAITING_FOR_QSEE
         property_get("sys.keymaster.loaded", property_val, "");
         if (strncmp(property_val, "true", sizeof(property_val)) == 0)
         {
+#endif
             ALOGD("keymaster app is loaded");
             break;
+#ifndef SKIP_WAITING_FOR_QSEE
         }
+#endif
         if (attempt_num == 0)
             ALOGE("keymaster app is not loaded, attempt number %d", attempt_num);
         attempt_num++;
