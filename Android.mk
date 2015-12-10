@@ -5,8 +5,10 @@ ifneq ($(filter msm8960 msm8226 msm8974 msm8610 msm8084 apq8084 msm8916 msm8952 
 
 keymaster-def := -fvisibility=hidden -Wall
 ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
+ifneq ($(SONY_BF64_KERNEL_VARIANT),true)
 ifneq ($(filter msm8960 msm8226 msm8974 msm8610 msm8084 apq8084,$(TARGET_BOARD_PLATFORM)),)
 keymaster-def += -D_ION_HEAP_MASK_COMPATIBILITY_WA
+endif
 endif
 else
 ifeq ($(TARGET_BOARD_PLATFORM),msm8084)
