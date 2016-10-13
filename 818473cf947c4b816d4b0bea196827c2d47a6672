@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff2e2bb8_7c8e002f",
+        "filename": "Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-10-13T04:14:57Z",
+      "side": 1,
+      "message": "This check is getting complex, you guys do set BOARD_USES_QCOM_HARDWARE, right?",
+      "revId": "818473cf947c4b816d4b0bea196827c2d47a6672",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
