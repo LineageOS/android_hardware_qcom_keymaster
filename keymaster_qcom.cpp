@@ -172,13 +172,13 @@ static int qcom_km_get_keypair_public(const keymaster0_device_t* dev,
         return -1;
     }
 
-    UniquePtr<uint8_t> key(static_cast<uint8_t*>(malloc(len)));
+    UniquePtr<unsigned char[]> key(new unsigned char[len]);
     if (key.get() == NULL) {
         ALOGE("Could not allocate memory for public key data");
         return -1;
     }
 
-    unsigned char* tmp = reinterpret_cast<unsigned char*>(key.get());
+    unsigned char* tmp = key.get();
     if (i2d_PUBKEY(pkey.get(), &tmp) != len) {
         ALOGE("Len 2 returned is < 0 len = %d", len);
         return -1;
