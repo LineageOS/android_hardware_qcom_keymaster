@@ -201,7 +201,6 @@ static int32_t qcom_km_ION_memalloc(struct qcom_km_ion_info_t *handle,
 {
     int32_t ret = 0;
     int32_t iret = 0;
-    int32_t fd = 0;
     unsigned char *v_addr;
     struct ion_allocation_data ion_alloc_data;
     int32_t ion_fd;
@@ -484,7 +483,7 @@ static int qcom_km_sign_data(const keymaster0_device_t* dev,
         return -1;
     }
     if (dataLength > KM_KEY_SIZE_MAX) {
-        ALOGE("Input data to be signed is too long %d bytes", dataLength);
+        ALOGE("Input data to be signed is too long %zu bytes", dataLength);
         return -1;
     }
     if (data == NULL) {
