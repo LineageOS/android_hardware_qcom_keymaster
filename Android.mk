@@ -42,6 +42,8 @@ LOCAL_SHARED_LIBRARIES := \
 LOCAL_HEADER_LIBRARIES := generated_kernel_headers
 
 LOCAL_MODULE_TAGS := optional
+LOCAL_VENDOR_MODULE := true
+LOCAL_MODULE_OWNER := qcom
 
 include $(BUILD_SHARED_LIBRARY)
 
