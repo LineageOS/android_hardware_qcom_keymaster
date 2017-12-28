@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85fab39f_b4319e5b",
+        "filename": "keymaster_qcom.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 18247
+      },
+      "writtenOn": "2017-12-28T20:57:01Z",
+      "side": 1,
+      "message": "Typo?",
+      "range": {
+        "startLine": 767,
+        "startChar": 44,
+        "endLine": 767,
+        "endChar": 52
+      },
+      "revId": "b49c9a25844479d17f7333476b6002421284f75a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    }
+  ]
+}
