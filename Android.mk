@@ -28,7 +28,7 @@ LOCAL_SHARED_LIBRARIES := \
         libc \
         libdl
 
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_HEADER_LIBRARIES := generated_kernel_headers
 
 LOCAL_MODULE_TAGS := optional
 
