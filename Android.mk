@@ -1,3 +1,5 @@
+$(error ************* Legacy keystore is no longer supported. Do not build it. ***************************)
+
 # TODO:  Find a better way to separate build configs for ADP vs non-ADP devices
 ifneq ($(BOARD_IS_AUTOMOTIVE),true)
 LOCAL_PATH := $(call my-dir)
